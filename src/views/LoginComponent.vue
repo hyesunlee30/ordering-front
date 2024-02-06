@@ -40,7 +40,7 @@ export default {
                 
                 if(token) {
                     const dcoded = jwtDecode(token);
-                    console.log(dcoded);
+                    localStorage.setItem("role",dcoded.role);
                     localStorage.setItem("token",token);
                     this.$router.push("/")
                 } else {
