@@ -1,20 +1,24 @@
 <template>
+    <template>
     <div class="container">
-        <div class="page-header text-center" style="margin-top: 20px;"><h1>회원 목록</h1></div>
+        <div class="page-header text-center" style="margin-top: 20px;"><h1>회원 정보</h1></div>
         <table class="table">
             <thead>
                 <tr>
-                    <th>id</th>
                     <th>이름</th>
                     <th>이메일</th>
-                    <th>주문수량</th>
+                    <th>도시</th>
+                    <th>상세주소</th>
+                    <th>우편번호</th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="member in memberList" :key="member.id">
-                    <td>{{member.id}}</td>
                     <td>{{member.name}}</td>
                     <td>{{member.email}}</td>
+                    <td>{{member.city}}</td>
+                    <td>{{member.street}}</td>
+                    <td>{{member.zipcode}}</td>
                     <td>
                         <a :href="`/member/${member.id}/orders`">
                             {{member.orderCount}}
@@ -25,25 +29,20 @@
         </table>
     </div>
 </template>
+<OrderListComponent
+    :isAdmin="false"
+    apiUrl = "`http://localhost:8080/member/myorders`"
+    />
+</template>
 
 <script>
-import axios from 'axios';
+import OrderListComponent from '@/components/OrderListComponent.vue';
+
 
 export default {
-    data(){
-        return {
-            memberList:[]
-        }
-        
+    props : {
+        id : Number
     },
-    async created() {
-        const token = localStorage.getItem('token')
-        const response = await axios.get("http://localhost:8080/members", {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
-        this.memberList = response.data;
-    }
+    components:{OrderListComponent}
 }
 </script>

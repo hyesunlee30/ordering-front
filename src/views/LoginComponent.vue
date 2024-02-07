@@ -1,6 +1,8 @@
 <template>
     <div class="container">
-        <div class="page-header"><h1>로그인</h1></div>
+        <div class="page-header text-center" style="margin-top: 20px;">
+            <h1>로그인</h1>
+        </div>
         <!-- sunmit은 기본적으로 폼 제출시 브라우저가 페이지르 새로고침하므로 해당동작을 막기 위해 prevent사용 -->
         <form @submit.prevent="doLogin">
             <div class="form-group">
@@ -42,7 +44,10 @@ export default {
                     const dcoded = jwtDecode(token);
                     localStorage.setItem("role",dcoded.role);
                     localStorage.setItem("token",token);
-                    this.$router.push("/")
+                    //created 함수는 reload될 때 1번만 실행되는 hook 함수
+                    // 그런데 router.push를 통한 화면전환은 reload를 실행시키지 않으므로, created 함수 호출이 되지 않음
+                    //this.$router.push("/")
+                    window.location.href = "/";
                 } else {
                     console.log("200 OK but not token");
                     alert("login faild");
