@@ -49,7 +49,7 @@ export default {
         try {
             const token = localStorage.getItem('token')
             console.log(token);
-            const response = await axios.get(this.apiUrl, {
+            const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}${this.apiUrl}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -79,7 +79,7 @@ export default {
             if(confirm("정말 삭제하시겠습니까?")) {
                 try {
                     const token = localStorage.getItem('token')
-                    const url = `http://localhost:8080/order/${orderId}/cancel`;
+                    const url = `${process.env.VUE_APP_API_BASE_URL}/${orderId}/cancel`;
                     await axios.delete(url,{
                         headers: {
                             Authorization: `Bearer ${token}`

@@ -1,48 +1,69 @@
 <template>
-    <template>
     <div class="container">
         <div class="page-header text-center" style="margin-top: 20px;"><h1>회원 정보</h1></div>
         <table class="table">
-            <thead>
-                <tr>
-                    <th>이름</th>
-                    <th>이메일</th>
-                    <th>도시</th>
-                    <th>상세주소</th>
-                    <th>우편번호</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="member in memberList" :key="member.id">
-                    <td>{{member.name}}</td>
-                    <td>{{member.email}}</td>
-                    <td>{{member.city}}</td>
-                    <td>{{member.street}}</td>
-                    <td>{{member.zipcode}}</td>
-                    <td>
-                        <a :href="`/member/${member.id}/orders`">
-                            {{member.orderCount}}
-                        </a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+            <tr><td>이름</td>
+                <td>{{memberinfo.name}}</td>
+            </tr>
+            <tr>
+                <td>이메일</td>
+                <td>{{memberinfo.email}}</td>
+            </tr>
+            <tr><td>도시</td>
+                <td>{{memberinfo.city}}</td>
+            </tr>
+            <tr><td>상세주소</td>
+                <td>{{memberinfo.street}}</td>
+            </tr>
+            <tr><td>우편번호</td>
+                <td>{{memberinfo.zipcod}}</td>
+            </tr>
+        </table>    
     </div>
-</template>
-<OrderListComponent
+    <OrderListComponent
     :isAdmin="false"
-    apiUrl = "`http://localhost:8080/member/myorders`"
+    apiUrl="/member/myorders"
     />
 </template>
 
 <script>
 import OrderListComponent from '@/components/OrderListComponent.vue';
-
+import axios from 'axios';
 
 export default {
-    props : {
-        id : Number
+    components:{OrderListComponent},
+    data(){
+        return {
+            memberinfo: {}
+        }
     },
-    components:{OrderListComponent}
+    created() {
+        this.fetchMember()
+    },
+    methods: {
+        async fetchMember() {
+            
+
+            try {
+                const url =`${process.env.VUE_APP_API_BASE_URL}/member/myInfo`
+                const token = localStorage.getItem('token')
+                const response = await axios.get(url, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                })
+                this.memberinfo = response.data;
+            } catch(error) {
+                const error_message = error.response
+                if(error_message) {
+                    alert(error_message.data.error_message)
+                } else {
+                    console.log(error);
+                    alert("입력값 확인 필요")
+                }
+                
+            }
+        }
+    }
 }
 </script>

@@ -38,7 +38,7 @@ export default {
     },
     async created() {
         const token = localStorage.getItem('token')
-        const response = await axios.get("http://localhost:8080/members", {
+        const response = await axios.get(`${process.env.VUE_APP_API_BASE_URL}/members`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }

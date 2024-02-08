@@ -6,6 +6,7 @@ import LoginComponent from '@/views/LoginComponent'
 //export default인경우에는 {} 필요없고, 여러개 요소가 있을 경우에는 {} 필요
 import { memberRoutes } from './memberRouter';
 import { orderRoutes } from './orderRouter';
+import { itemRoutes } from './itemRouter';
 
 
 const routes = [
@@ -30,7 +31,8 @@ const routes = [
         component: LoginComponent,
     },
     ...memberRoutes, //주로 배열요소를 다른 배열요소에 합할때 사용
-    ...orderRoutes
+    ...orderRoutes,
+    ...itemRoutes
 ]
 
 const router = createRouter({

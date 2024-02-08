@@ -63,7 +63,8 @@ export default {
                     street:this.street,
                     zipcode:this.zipcode
                 };
-                await axios.post("http://localhost:8080/member/create", registerData)
+                const url = `${process.env.VUE_APP_API_BASE_URL}/member/create`;
+                await axios.post(url, registerData)
                 this.$router.push({name : "Login"})
                 
             } catch(error) {

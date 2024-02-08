@@ -37,7 +37,7 @@ export default {
             try {
                 //2가지 예외 가능성 : 200번대 상태값 token이 비어있는 경우
                 const loginData = {email:this.email, password:this.password};
-                const response = await axios.post("http://localhost:8080/doLogin", loginData)
+                const response = await axios.post(`${process.env.VUE_APP_API_BASE_URL}/doLogin`, loginData)
                 const token = response.data.result.token;
                 
                 if(token) {
