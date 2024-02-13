@@ -1,5 +1,5 @@
 import {createRouter, createWebHistory} from 'vue-router';
-import HomeComponent from '@/components/HomeComponent'
+import ItemList from '@/views/ItemList'
 import MemberList from '@/views/MemberList'
 import MemberCreate from '@/views/MemberCreate'
 import LoginComponent from '@/views/LoginComponent'
@@ -7,13 +7,17 @@ import LoginComponent from '@/views/LoginComponent'
 import { memberRoutes } from './memberRouter';
 import { orderRoutes } from './orderRouter';
 import { itemRoutes } from './itemRouter';
-
+import BasicComponent from '@/components/BasicComponent'
 
 const routes = [
     {
         path: '/',
         name: 'HOME',
-        component: HomeComponent,
+        component: ItemList,
+    },{
+        path: '/basic',
+        name: 'basic',
+        component: BasicComponent,
     },
     {
         path: '/members',
