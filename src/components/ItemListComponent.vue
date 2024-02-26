@@ -50,8 +50,12 @@
 </template>
 <script>
 import axios from 'axios';
+import {mapActions, mapGetters} from 'vuex';
 export default {
     props: ['isAdmin', 'pageTitle'],
+    computed:{
+        ...mapGetters(['getTotalQuantity'])
+    },
     data(){
         return{
             itemList: [],
@@ -76,6 +80,7 @@ export default {
     //mutaions는 상태를 변경하는 함수들의 집합
     //vuex에서 커밋이라는 용어는 상태변경을 위해 mutation을 호출하는 과정을 의미
     methods: {
+        ...mapActions(['addToCart']),
         //외부 컴포넌ㅌ(또는 action)에서 호출될 예정
         addCart() {
             const orderItems = Object.keys(this.selectedItems)
@@ -84,7 +89,16 @@ export default {
                     const item = this.itemList.find(item => item.id == key)
                     return {itemId: item.id, name:item.name, count: item.quantity}
                 })
-            orderItems.forEach(item => this.$store.commit('addToCart', item));
+            if(orderItems.length < 1) {
+                alert("장바구니에 담을 물건이 없습니다.");
+                return;
+            }
+            //mutation 직접호출
+            //orderItems.forEach(item => this.$store.commit('addToCart', item));
+
+            
+            orderItems.forEach(item => this.$store.dispatch('addToCart', item));
+            this.selectedItems
             
         },   
         async deleteItem(itemId) {
@@ -106,6 +120,15 @@ export default {
                 const item = this.itemList.find(item => item.id == key)
                 return {itemId: item.id, count: item.quantity}
             })
+
+            if(orderItems.length < 1) {
+                alert("주문대상 물건이 없습니다.");
+                return;
+            }
+            if(!confirm(`${this.getTotalQuantity}개의 상품을 주문하시겠습니까?`)) {    
+                alert("주문이 취소 되었습니다.");
+            }
+
             const token = localStorage.getItem('token')
             const headers = token?{Authorization: `Bearer ${token}`}:{};
 
@@ -113,6 +136,7 @@ export default {
                 await axios.post(`${process.env.VUE_APP_API_BASE_URL}/order/create`, orderItems, {headers});
                 console.log(orderItems);
                 alert("주문 완료 되었습니다.")
+                this.$store.commit('clearCart');
                 window.location.reload();
             } catch(error) {
                 console.log(error);
@@ -125,6 +149,7 @@ export default {
         },
         searchItems(){
             this.itemList = [];
+            this.selectedItems = [];
             this.currentPage = 0;
             this.isLastPage = false;
             this.loadItems();
